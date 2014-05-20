@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/user.eclass,v 1.22 2012/06/22 19:18:24 axs Exp $
+# $Header: /var/cvsroot/gentoo-x86/eclass/user.eclass,v 1.23 2014/05/19 00:44:24 lkraav Exp $
 
 # @ECLASS: user.eclass
 # @MAINTAINER:
@@ -15,6 +15,9 @@
 
 if [[ ${___ECLASS_ONCE_USER} != "recur -_+^+_- spank" ]] ; then
 ___ECLASS_ONCE_USER="recur -_+^+_- spank"
+
+local MYPREFIX="OVERLAY user.eclass 1.23"
+ewarn "${MYPREFIX} loaded"
 
 # @FUNCTION: _assert_pkg_ebuild_phase
 # @INTERNAL
@@ -39,6 +42,8 @@ _assert_pkg_ebuild_phase() {
 # Supported databases: group passwd
 egetent() {
 	local db=$1 key=$2
+
+	ewarn "${MYPREFIX} egetent() db ${db} key ${key} ROOT ${ROOT}"
 
 	[[ $# -ge 3 ]] && die "usage: egetent <database> <key>"
 
