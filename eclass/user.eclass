@@ -99,7 +99,7 @@ egetent() {
 	*)
 		# ignore output if nscd doesn't exist, or we're not running as root
 		nscd -i "${db}" 2>/dev/null
-		getent "${db}" "${key}"
+		chroot ${ROOT} getent "${db}" "${key}"
 		;;
 	esac
 }
@@ -252,14 +252,14 @@ enewuser() {
 		;;
 
 	*)
-		useradd -r "${opts[@]}" "${euser}" || die
+		useradd -r "${opts[@]}" -R ${ROOT} "${euser}" || die
 		;;
 	esac
 
 	if [[ ! -e ${ROOT}/${ehome} ]] ; then
 		einfo " - Creating ${ehome} in ${ROOT}"
 		mkdir -p "${ROOT}/${ehome}"
-		chown "${euser}" "${ROOT}/${ehome}"
+		chroot ${ROOT} chown "${euser}" "${ROOT}/${ehome}"
 		chmod 755 "${ROOT}/${ehome}"
 	fi
 }
@@ -345,7 +345,7 @@ enewgroup() {
 			opts="-g ${egid}"
 		fi
 		# We specify -r so that we get a GID in the system range from login.defs
-		groupadd -r ${opts} "${egroup}" || die
+		groupadd -r ${opts} -R ${ROOT} "${egroup}" || die
 		;;
 	esac
 }
@@ -440,7 +440,7 @@ esethome() {
 	if [[ ! -e ${ROOT}/${ehome} ]] ; then
 		einfo " - Creating ${ehome} in ${ROOT}"
 		mkdir -p "${ROOT}/${ehome}"
-		chown "${euser}" "${ROOT}/${ehome}"
+		chroot ${ROOT} chown "${euser}" "${ROOT}/${ehome}"
 		chmod 755 "${ROOT}/${ehome}"
 	fi
 
@@ -459,7 +459,7 @@ esethome() {
 		;;
 
 	*)
-		usermod -d "${ehome}" "${euser}" && return 0
+		usermod -d "${ehome}" -R ${ROOT} "${euser}" && return 0
 		[[ $? == 8 ]] && eerror "${euser} is in use, cannot update home"
 		eerror "There was an error when attempting to update the home directory for ${euser}"
 		eerror "Please update it manually on your system (as root):"
