@@ -14,7 +14,8 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-RDEPEND="app-portage/portage-bashrc-mv
+RDEPEND="app-misc/color
+	app-portage/portage-bashrc-mv
 	dev-vcs/git-sh
 "
 
